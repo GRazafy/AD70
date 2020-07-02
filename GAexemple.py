@@ -13,7 +13,7 @@ import random as rd #génération de nombre aléatoire
 from random import randint # génération des nombres aléatoires  
 import matplotlib.pyplot as plt
 import msvcrt as m
-
+import csv
 from math import *
     
 
@@ -26,12 +26,24 @@ gain_escompte =  cout*np.random.uniform(0, 0.8, size=nb_actions) # gain_escompte
 budget = 3000    #Le budget 
 print('La liste des objet est la suivante :')
 print('ID_objet   Coûts   Gain_escompte')
-for i in range(ID_objets.shape[0]):
-    print('{0}          {1}      {2}\n'.format(ID_objets[i], cout[i], gain_escompte[i]))
+
+
+######################### Q4 ################################
+with open("data.csv", 'w',) as csvfile:
+    spamwriter = csv.writer(csvfile, delimiter=',',
+                            quotechar='|', quoting=csv.QUOTE_MINIMAL)
+    spamwriter.writerow(['ID_objet' , 'Couts' , 'Gain_escompte'])
+    for i in range(ID_objets.shape[0]):
+        print(f'{ID_objets[i]} \t\t {cout[i]} \t\t {gain_escompte[i]}')
+        spamwriter.writerow([f'{ID_objets[i]}'] +
+                            [f'{cout[i]}'] + [f'{gain_escompte[i]}'])
+    print()
 
 # Créer la population initiale
 solutions_par_pop = 10 #la taille de la population
 
+
+######################### Q2 && Q3 ###########################
 def generateTab():
     population_initiale = np.empty([solutions_par_pop, nb_actions])
     for i in range (0,solutions_par_pop):
@@ -134,6 +146,8 @@ def optimize(cout, gain_escompte, population, pop_size, nbr_generations, capacit
     max_fitness = np.where(fitness_derniere_generation == np.max(fitness_derniere_generation))
     sol_opt.append(population[max_fitness[0][0],:])
     return sol_opt, historique_fitness
+
+
 
 #paramètres de l'algorithme génétique
 nbr_generations = 100 # nombre de générations
